@@ -10,4 +10,8 @@ public interface ContactUsDao {
 	List<ContactRequest> getAllUnarchivedRequests();
 
 	List<ContactRequest> getAllArchivedRequests();
+
+	boolean archiveRequest(int id);
+
+	boolean deleteRequest(int id);
 }

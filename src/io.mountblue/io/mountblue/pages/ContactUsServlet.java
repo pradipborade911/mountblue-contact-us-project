@@ -45,11 +45,12 @@ public class ContactUsServlet extends HttpServlet{
 			RequestDispatcher rd = req.getRequestDispatcher("welcome.jsp");
 			req.setAttribute("isSubmitSuccess", true);
 			rd.forward(req, resp);
-		}
+		}else {
 		
 		RequestDispatcher rd = req.getRequestDispatcher("login.jsp");
 		rd.forward(req, resp);
 //		resp.sendRedirect("/login.jsp");
+		}
 	}
 
 }

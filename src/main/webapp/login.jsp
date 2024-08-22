@@ -97,6 +97,9 @@ input[type="submit"]:hover {
 				<input type="text" id="username" name="username" required> <label
 					for="password">Enter password<span class="mandatory">*</span></label>
 				<input type="password" id="password" name="password" required>
+				<%if(request != null){
+					%><p style="color: red;">Incorrect username or password. Please try again.</p><%
+				} %>
 
 				<label for="submit"></label> <input type="submit" value="LOGIN">
 			</form>

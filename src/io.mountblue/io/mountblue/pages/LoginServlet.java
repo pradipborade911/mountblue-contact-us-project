@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet{
 		Admin user = admin.authenticateAdmin(username, password);
 		
 		if(user == null) {
-			RequestDispatcher rd = req.getRequestDispatcher("login");
+			RequestDispatcher rd = req.getRequestDispatcher("login.jsp");
 			rd.forward(req, resp);
 		}		
 		

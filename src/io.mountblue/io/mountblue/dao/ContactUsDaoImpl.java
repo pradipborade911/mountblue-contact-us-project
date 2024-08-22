@@ -18,7 +18,7 @@ public class ContactUsDaoImpl implements ContactUsDao {
 	@Override
 	public boolean createContactUsRequest(ContactRequest contactRequest) {
 		try (Connection connection = DBUtils.getConnetion()) {
-			String query = "INSERT INTO contact_us_requests(full_name, email, message) VALUES(?,?,?)";
+			String query = "INSERT INTO requests(full_name, email, message) VALUES(?,?,?)";
 			
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, contactRequest.getFullName());
@@ -43,20 +43,23 @@ public class ContactUsDaoImpl implements ContactUsDao {
 		List<ContactRequest> allUnarchivedRequests = new ArrayList<ContactRequest>();
 		
 		try (Connection connection = DBUtils.getConnetion()) {
-			String query = "SELECT full_name, email, message FROM contact_us_requests WHERE archived=FALSE";
+			String query = "SELECT id, full_name, email, message FROM requests WHERE status='Active'";
 			PreparedStatement statement = connection.prepareStatement(query);
 			
 			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-				String fullName = resultSet.getString(1);
-				String email = resultSet.getString(2);
-				String message = resultSet.getString(3);
+				int id = resultSet.getInt(1);
+				String fullName = resultSet.getString(2);
+				String email = resultSet.getString(3);
+				String message = resultSet.getString(4);
 				
 				ContactRequest conatctRequest = new ContactRequest();
+				conatctRequest.setId(id);
 				conatctRequest.setFullName(fullName);
 				conatctRequest.setEmail(email);
 				conatctRequest.setMessage(message);
+				conatctRequest.setStatus("Active");
 				
 				allUnarchivedRequests.add(conatctRequest);
 			}
@@ -73,20 +76,23 @@ public class ContactUsDaoImpl implements ContactUsDao {
 		List<ContactRequest> allArchivedRequests = new ArrayList<ContactRequest>();
 		
 		try (Connection connection = DBUtils.getConnetion()) {
-			String query = "SELECT full_name, email, message FROM contact_us_requests WHERE archived=TRUE";
+			String query = "SELECT id, full_name, email, message FROM requests WHERE status='Archived'";
 			PreparedStatement statement = connection.prepareStatement(query);
 			
 			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-				String fullName = resultSet.getString(1);
-				String email = resultSet.getString(2);
-				String message = resultSet.getString(3);
+				int id = resultSet.getInt(1);
+				String fullName = resultSet.getString(2);
+				String email = resultSet.getString(3);
+				String message = resultSet.getString(4);
 				
 				ContactRequest conatctRequest = new ContactRequest();
+				conatctRequest.setId(id);
 				conatctRequest.setFullName(fullName);
 				conatctRequest.setEmail(email);
 				conatctRequest.setMessage(message);
+				conatctRequest.setStatus("Archived");
 				
 				allArchivedRequests.add(conatctRequest);
 			}
@@ -96,6 +102,48 @@ public class ContactUsDaoImpl implements ContactUsDao {
 			e.printStackTrace();
 		}
 		return allArchivedRequests;
+	}
+
+	@Override
+	public boolean archiveRequest(int id) {
+		try (Connection connection = DBUtils.getConnetion()) {
+			String query = "UPDATE requests SET status='Archived' WHERE id=?";
+			
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, id);
+			int rows = statement.executeUpdate();
+
+			if (rows == 1) {
+				return true;
+			}
+			
+		} catch (ClassNotFoundException e) {			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean deleteRequest(int id) {
+		try (Connection connection = DBUtils.getConnetion()) {
+			String query = "DELETE FROM requests WHERE id=?";
+			
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, id);
+			int rows = statement.executeUpdate();
+
+			if (rows == 1) {
+				return true;
+			}
+			
+		} catch (ClassNotFoundException e) {			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

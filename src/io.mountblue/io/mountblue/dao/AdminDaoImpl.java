@@ -10,7 +10,6 @@ import io.mountblue.utilities.DBUtils;
 
 
 public class AdminDaoImpl implements AdminDao {
-
 	@Override
 	public Admin authenticateAdmin(String username, String password) {
 		try(Connection connection = DBUtils.getConnetion()) {
@@ -42,6 +41,9 @@ public class AdminDaoImpl implements AdminDao {
 		}
 		return null;
 	}
+public AdminDaoImpl() {
+	super();
+}
 
 	@Override
 	public boolean createAdmin(String name, String username, String email, String password) {

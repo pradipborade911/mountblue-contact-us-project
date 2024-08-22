@@ -33,6 +33,8 @@ th, td {
 			<th>Name</th>
 			<th>Email</th>
 			<th>Message</th>
+			<th>Status</th>
+			<th>Change Status</th>
 		</tr>
 		<%
 		List<ContactRequest> allUnarchivedRequests = (List) request.getAttribute("allUnarchivedRequests");
@@ -42,6 +44,13 @@ th, td {
 			<td><%=conatctRequest.getFullName()%></td>
 			<td><%=conatctRequest.getEmail()%></td>
 			<td><%=conatctRequest.getMessage()%></td>
+			<td><%=conatctRequest.getStatus()%></td>
+			<td>
+			<form action="archive-request"  method="post">
+			<input type="hidden" name="id" value=<%=conatctRequest.getId() %>>
+			<input type="submit" value="Archive">
+			</form>
+			</td>
 		</tr>
 		<%
 		}
@@ -54,6 +63,8 @@ th, td {
 			<th>Name</th>
 			<th>Email</th>
 			<th>Message</th>
+			<th>Status</th>
+			<th>Change Status</th>
 		</tr>
 		<%
 		List<ContactRequest> allArchivedRequests = (List) request.getAttribute("allArchivedRequests");
@@ -63,6 +74,13 @@ th, td {
 			<td><%=conatctRequest.getFullName()%></td>
 			<td><%=conatctRequest.getEmail()%></td>
 			<td><%=conatctRequest.getMessage()%></td>
+			<td><%=conatctRequest.getStatus()%></td>
+			<td>
+			<form action="delete-request" method="post">
+			<input type="hidden" name="id" value=<%=conatctRequest.getId()%>>
+			<input type="submit" value="Delete">
+			</form>
+			</td>
 		</tr>
 		<%
 		}
