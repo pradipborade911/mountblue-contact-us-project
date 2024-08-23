@@ -1,6 +1,6 @@
 package io.mountblue.pojos;
 
-public class Admin {
+public class User {
 	private String name;
 	private String username;
 	private String password;

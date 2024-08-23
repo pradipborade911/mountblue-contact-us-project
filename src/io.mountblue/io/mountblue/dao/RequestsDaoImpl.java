@@ -9,14 +9,14 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 
-import io.mountblue.pojos.ContactRequest;
-import io.mountblue.pojos.Admin;
+import io.mountblue.pojos.Request;
+import io.mountblue.pojos.User;
 import io.mountblue.utilities.DBUtils;
 
-public class ContactUsDaoImpl implements ContactUsDao {
+public class RequestsDaoImpl implements RequestsDao {
 
 	@Override
-	public boolean createContactUsRequest(ContactRequest contactRequest) {
+	public boolean saveRequest(Request contactRequest) {
 		try (Connection connection = DBUtils.getConnetion()) {
 			String query = "INSERT INTO requests(full_name, email, message) VALUES(?,?,?)";
 			
@@ -39,11 +39,11 @@ public class ContactUsDaoImpl implements ContactUsDao {
 	}
 
 	@Override
-	public List<ContactRequest> getAllUnarchivedRequests() {
-		List<ContactRequest> allUnarchivedRequests = new ArrayList<ContactRequest>();
+	public List<Request> getAllUnarchivedRequests() {
+		List<Request> allUnarchivedRequests = new ArrayList<Request>();
 		
 		try (Connection connection = DBUtils.getConnetion()) {
-			String query = "SELECT id, full_name, email, message FROM requests WHERE status='Active'";
+			String query = "SELECT id, full_name, email, message FROM requests WHERE active=true";
 			PreparedStatement statement = connection.prepareStatement(query);
 			
 			ResultSet resultSet = statement.executeQuery();
@@ -54,7 +54,7 @@ public class ContactUsDaoImpl implements ContactUsDao {
 				String email = resultSet.getString(3);
 				String message = resultSet.getString(4);
 				
-				ContactRequest conatctRequest = new ContactRequest();
+				Request conatctRequest = new Request();
 				conatctRequest.setId(id);
 				conatctRequest.setFullName(fullName);
 				conatctRequest.setEmail(email);
@@ -72,11 +72,11 @@ public class ContactUsDaoImpl implements ContactUsDao {
 	}
 
 	@Override
-	public List<ContactRequest> getAllArchivedRequests() {
-		List<ContactRequest> allArchivedRequests = new ArrayList<ContactRequest>();
+	public List<Request> getAllArchivedRequests() {
+		List<Request> allArchivedRequests = new ArrayList<Request>();
 		
 		try (Connection connection = DBUtils.getConnetion()) {
-			String query = "SELECT id, full_name, email, message FROM requests WHERE status='Archived'";
+			String query = "SELECT id, full_name, email, message FROM requests WHERE active=false";
 			PreparedStatement statement = connection.prepareStatement(query);
 			
 			ResultSet resultSet = statement.executeQuery();
@@ -87,7 +87,7 @@ public class ContactUsDaoImpl implements ContactUsDao {
 				String email = resultSet.getString(3);
 				String message = resultSet.getString(4);
 				
-				ContactRequest conatctRequest = new ContactRequest();
+				Request conatctRequest = new Request();
 				conatctRequest.setId(id);
 				conatctRequest.setFullName(fullName);
 				conatctRequest.setEmail(email);
@@ -104,46 +104,29 @@ public class ContactUsDaoImpl implements ContactUsDao {
 		return allArchivedRequests;
 	}
 
-	@Override
-	public boolean archiveRequest(int id) {
-		try (Connection connection = DBUtils.getConnetion()) {
-			String query = "UPDATE requests SET status='Archived' WHERE id=?";
-			
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setInt(1, id);
-			int rows = statement.executeUpdate();
-
-			if (rows == 1) {
-				return true;
-			}
-			
-		} catch (ClassNotFoundException e) {			
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
 
 	@Override
-	public boolean deleteRequest(int id) {
-		try (Connection connection = DBUtils.getConnetion()) {
-			String query = "DELETE FROM requests WHERE id=?";
-			
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setInt(1, id);
-			int rows = statement.executeUpdate();
+	public boolean changeStatus(int requestId, boolean isActive) {
+	try (Connection connection = DBUtils.getConnetion()) {
+		String query = "UPDATE requests SET active=? WHERE id=?";
+		
+		System.out.println(isActive);
+		
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setBoolean(1, isActive);
+		statement.setInt(2, requestId);
+		int rows = statement.executeUpdate();
 
-			if (rows == 1) {
-				return true;
-			}
-			
-		} catch (ClassNotFoundException e) {			
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (rows == 1) {
+			return true;
 		}
-		return false;
+
+	} catch (ClassNotFoundException e) {
+		e.printStackTrace();
+	} catch (SQLException e) {
+		e.printStackTrace();
 	}
+	return false;
+}
 
 }

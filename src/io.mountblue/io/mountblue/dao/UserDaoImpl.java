@@ -5,13 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import io.mountblue.pojos.Admin;
+import io.mountblue.pojos.User;
 import io.mountblue.utilities.DBUtils;
 
 
-public class AdminDaoImpl implements AdminDao {
+public class UserDaoImpl implements UserDao {
 	@Override
-	public Admin authenticateAdmin(String username, String password) {
+	public User authenticateUser(String username, String password) {
 		try(Connection connection = DBUtils.getConnetion()) {
 			String query = "SELECT password, name, email FROM users WHERE username=?";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -25,7 +25,7 @@ public class AdminDaoImpl implements AdminDao {
             	if(password.equals(realPassword)) {
                 	String name =  resultSet.getString(2);                	
                 	String email =  resultSet.getString(3);
-            		Admin admin = new Admin();
+            		User admin = new User();
             		admin.setName(name);
             		admin.setUsername(username);
             		admin.setEmail(email);
@@ -36,14 +36,10 @@ public class AdminDaoImpl implements AdminDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		return null;
 	}
-public AdminDaoImpl() {
-	super();
-}
 
 	@Override
 	public boolean createAdmin(String name, String username, String email, String password) {
@@ -64,7 +60,6 @@ public AdminDaoImpl() {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		

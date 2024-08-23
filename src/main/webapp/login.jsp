@@ -15,7 +15,7 @@ body {
 #main {
 	background-color: white;
 	padding: 10px;
-	width: 50%;
+	width: 35%;
 	min-width: 500px;
 	margin: 0 auto;
 }
@@ -83,10 +83,12 @@ input[type="submit"]:hover {
 </style>
 </head>
 <body>
-	<div id="main">
+	<nav id="navbar">
 		<div id="home">
-			<a href="welcome.jsp">HOME</a>
+			<a href="contactus">Contact Us</a>
 		</div>
+	</nav>
+	<div id="main">
 		<div id="form-title">
 			<h1>Admin Login</h1>
 			<p>This is admin login page</p>
@@ -97,9 +99,13 @@ input[type="submit"]:hover {
 				<input type="text" id="username" name="username" required> <label
 					for="password">Enter password<span class="mandatory">*</span></label>
 				<input type="password" id="password" name="password" required>
-				<%if(request != null){
-					%><p style="color: red;">Incorrect username or password. Please try again.</p><%
-				} %>
+				<%
+				if (request.getAttribute("wrongCreds") != null && request.getAttribute("wrongCreds").equals("true")) {
+				%><p style="color: red;">Incorrect username or password. Please
+					try again.</p>
+				<%
+				}
+				%>
 
 				<label for="submit"></label> <input type="submit" value="LOGIN">
 			</form>

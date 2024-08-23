@@ -9,22 +9,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.mountblue.dao.ContactUsDao;
-import io.mountblue.dao.ContactUsDaoImpl;
-import io.mountblue.dao.AdminDao;
-import io.mountblue.dao.AdminDaoImpl;
-import io.mountblue.pojos.ContactRequest;
-import io.mountblue.pojos.Admin;
-
+import io.mountblue.dao.RequestsDao;
+import io.mountblue.dao.RequestsDaoImpl;
+import io.mountblue.dao.UserDao;
+import io.mountblue.dao.UserDaoImpl;
+import io.mountblue.pojos.Request;
+import io.mountblue.pojos.User;
 
 @WebServlet("/contactus")
-public class ContactUsServlet extends HttpServlet{
-	
-	ContactUsDao contactUsDao;
-	
+public class ContactUsServlet extends HttpServlet {
+
+	RequestsDao contactUsDao;
+
 	@Override
 	public void init() throws ServletException {
-		contactUsDao = new ContactUsDaoImpl();
+		contactUsDao = new RequestsDaoImpl();
+	}
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		RequestDispatcher rd = req.getRequestDispatcher("contactus.jsp");
+		rd.forward(req, resp);
 	}
 	
 	@Override
@@ -32,24 +37,21 @@ public class ContactUsServlet extends HttpServlet{
 		String fullName = req.getParameter("fullName");
 		String email = req.getParameter("email");
 		String message = req.getParameter("message");
-		System.out.println("Full Name: " + fullName + ", Email: " + email + ", Message: " + message);
-		
-		ContactRequest conatctRequest = new ContactRequest();
+
+		Request conatctRequest = new Request();
 		conatctRequest.setFullName(fullName);
 		conatctRequest.setEmail(email);
 		conatctRequest.setMessage(message);
-		
-		boolean isSubmitSuccess = contactUsDao.createContactUsRequest(conatctRequest);
-		
-		if(isSubmitSuccess) {
-			RequestDispatcher rd = req.getRequestDispatcher("welcome.jsp");
+
+		boolean isSubmitSuccess = contactUsDao.saveRequest(conatctRequest);
+
+		if (isSubmitSuccess) {
+			RequestDispatcher rd = req.getRequestDispatcher("contactus.jsp");
 			req.setAttribute("isSubmitSuccess", true);
 			rd.forward(req, resp);
-		}else {
-		
-		RequestDispatcher rd = req.getRequestDispatcher("login.jsp");
-		rd.forward(req, resp);
-//		resp.sendRedirect("/login.jsp");
+		} else {
+			RequestDispatcher rd = req.getRequestDispatcher("contactus.jsp");
+			rd.forward(req, resp);
 		}
 	}
 

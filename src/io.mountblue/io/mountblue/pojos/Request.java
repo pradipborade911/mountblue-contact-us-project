@@ -1,6 +1,6 @@
 package io.mountblue.pojos;
 
-public class ContactRequest {
+public class Request {
 	private int id;
 	private String fullName;
 	private String email;

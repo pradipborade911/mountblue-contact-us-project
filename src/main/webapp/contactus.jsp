@@ -15,7 +15,7 @@ body {
 #main {
 	background-color: white;
 	padding: 10px;
-	width: 50%;
+	width: 35%;
 	min-width: 500px;
 	margin: 0 auto;
 }
@@ -80,14 +80,37 @@ input[type="submit"] {
 input[type="submit"]:hover {
 	background-color: #0056b3;
 }
+
+#navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 0 20px 0;
+}
+
+}
+.navbar {
+	display: flex;
+}
 </style>
 </head>
 <body>
-
-	<div id="main">
+	<nav id="navbar">
 		<div id="home">
-			<a href="welcome.jsp">HOME</a>
+			<a href="login">Admin Login </a>
 		</div>
+	</nav>
+	<div id="main">
+		<%Object isSubmitSuccess = request.getAttribute("isSubmitSuccess");
+    %>
+		<%if(isSubmitSuccess != null && (boolean)isSubmitSuccess == true){
+        %><p style="color: green;">We have received your message.
+			Thank you for reaching out.</p>
+		<p style="color: #333333;">You are welcome to send us another
+			inquiry at any time.</p>
+		<%
+    } %>
+
 		<div id="form-title">
 			<h1>Contact Us</h1>
 			<p>Please fill this form in a decent manner</p>
